@@ -1,7 +1,7 @@
 <a name="readme-top"></a>
-# TCIA Case 0396 — Single-Case Pilot & Unit Test
+# TCIA Case 0396 — Single-Case Unit Test
 
-This is the **single-case validation companion** to the [MRI & Ultrasound Biopsy Visualizer](https://github.com/rathinaraja/MRI_Ultrasound_Visualizer) framework. Before running the full pipeline across all 20 dataset cases, every step — download, inventory, biopsy extraction, 3D/2D visualization, coordinate verification — is proven correct end-to-end on **one** case first: `Prostate-MRI-US-Biopsy-0396`.
+This is the **single-case validation companion** to the [MRI & Ultrasound Biopsy Visualizer](https://github.com/rathinaraja/MRI_Ultrasound_Visualizer) framework. Before running the full pipeline across all 20 dataset cases, every step, download, inventory, biopsy extraction, 3D/2D visualization, coordinate verification, is proven correct end-to-end on **one** case first: `Prostate-MRI-US-Biopsy-0396`.
 
 Nothing here replaces the main framework's code; this bundle adds three case-preparation scripts on top of it and points the same `config.py` at a single case's data instead of a 20-case dataset root.
 
@@ -26,7 +26,7 @@ Nothing here replaces the main framework's code; this bundle adds three case-pre
 
 ## Background
 
-In MRI–ultrasound fusion-guided prostate biopsy, a patient's prior multiparametric MRI (used to identify suspicious lesions) is nonrigidly registered — "fused" — with a real-time transrectal ultrasound volume acquired during the biopsy. Because each needle's 3D trajectory is mechanically tracked, every core can be mapped back to its precise location relative to both the MRI and ultrasound volumes. See the main framework's README for the full background on this imaging workflow — this document focuses on validating that framework against a single, fully-characterized case.
+In MRI–ultrasound fusion-guided prostate biopsy, a patient's prior multiparametric MRI (used to identify suspicious lesions) is nonrigidly registered (fused) with a real-time transrectal ultrasound volume acquired during the biopsy. Because each needle's 3D trajectory is mechanically tracked, every core can be mapped back to its precise location relative to both the MRI and ultrasound volumes. See the main framework's README for the full background on this imaging workflow; this document focuses on validating that framework against a single, fully-characterized case.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -53,7 +53,7 @@ Only once all of this is verified correct for `Prostate-MRI-US-Biopsy-0396` does
 This case was chosen as the pilot specifically because its ground truth is simple enough to sanity-check by hand:
 
 - **17 biopsy cores**, all with valid MRI coordinates (no missing-data placeholders to work around on the first pass).
-- **A clean, verifiable Gleason mix** — 6 benign, 5 Gleason 3+3, 6 higher-grade — so all three tube colors are exercised.
+- **A clean, verifiable Gleason mix** — 6 benign, 5 Gleason 3+3, 6 higher-grade, so all three tube colors are exercised.
 - **One MRI target** (one lesion to render, not a multi-lesion edge case).
 - **A simple one-MRI/one-ultrasound series mapping** — no ambiguity about which series is which.
 
@@ -61,7 +61,7 @@ This case was chosen as the pilot specifically because its ground truth is simpl
 
 ## Dataset
 
-This bundle downloads **only** `Prostate-MRI-US-Biopsy-0396` from TCIA's [`Prostate-MRI-US-Biopsy`](https://www.cancerimagingarchive.net/collection/prostate-mri-us-biopsy/) collection — its MR + ultrasound DICOM, via `01_download_case_0396.py`.
+This bundle downloads **only** `Prostate-MRI-US-Biopsy-0396` from TCIA's [`Prostate-MRI-US-Biopsy`](https://www.cancerimagingarchive.net/collection/prostate-mri-us-biopsy/) collection; its MR + ultrasound DICOM, via `01_download_case_0396.py`.
 
 Two things are **not** automated by the scripts in this bundle and need to be obtained separately:
 
@@ -75,15 +75,17 @@ Two things are **not** automated by the scripts in this bundle and need to be ob
 ## Repository Structure
 
 ```
-TCIA_case_0396_pilot/
-├── data/            <- CASE_ROOT points here
-└── scripts/
+unit_test/ 
+├── dataset_TCIA_case_0396/
+├── download_TCIA_case_0396/
+├── output_TCIA_case_0396/ 
+└── visualization_code/
 ```
 
 ### `data/` — one case's data (= `CASE_ROOT` in `config.py`)
 
 ```
-TCIA_case_0396/
+unit_test/dataset_TCIA_case_0396/
 ├── biopsy/
 │   └── case_0396_biopsy_tracks.csv
 ├── dicom/
@@ -108,7 +110,7 @@ TCIA_case_0396/
 │   └── selected_stl/
 │       └── Prostate-MRI-US-Biopsy-0396/
 │           └── *.STL
-└── outputs/         <- created automatically by config.py on first run
+└── output_TCIA_case_0396         
 ```
 
 ### `scripts/` — code
