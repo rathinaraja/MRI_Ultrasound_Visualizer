@@ -252,23 +252,24 @@ Each of these loops over every case on its own, same as `run_pipeline.py` does i
 
 ## Understanding the Output Images
 
-Every file below lives in `outputs/<case_id>/`. Descriptions here use example images from `images/` — drop your own generated files there with matching names to see them rendered in this README.
+Every file below lives in `outputs/<case_id>/`. Descriptions here use example images from `sample_output/` — drop your own generated files there with matching names to see them rendered in this README.
 
 ### `biopsy_visualization.png` / `.html`
 
 The full 3D scene: prostate capsule (semi-transparent gray), target lesion (solid green), every biopsy tube (colored by Gleason score), **plus** one or more real MR slice planes textured with actual image intensity. This is the closest equivalent to what you'd see live in 3D Slicer with the image volume loaded alongside the models — use it to confirm the tubes and mesh are spatially correct relative to the underlying MRI, not just relative to each other.
 
-<!-- TODO: place biopsy_visualization.png in images/ -->
-![Full 3D scene with MR slice planes](images/biopsy_visualization.png)
+<!-- TODO: place biopsy_visualization.png in images/ --> 
+<img src="sample_output/biopsy_visualization.png" width="35%"/>
 
 The `.html` version is the same scene, but interactive and rotatable in a browser — open it directly, no Slicer or Python required.
+
+![Full 3D scene with MR slice planes](https://github.com/rathinaraja/MRI_Ultrasound_Visualizer/tree/main/sample_output/biopsy_visualization.html)
 
 ### `biopsy_visualization_mesh_only.png` / `.html`
 
 The same mesh + tubes, but with **no MR/US image data at all**, on a two-tone gradient background matching TCIA's own reference figure. Purpose: an uncluttered view that emphasizes gland shape, lesion location, and needle-track color-coding on their own — closer to a diagram than a scan, and what `combined_summary.png` uses as its 3D panel.
 
-<!-- TODO: place biopsy_visualization_mesh_only.png in images/ -->
-![Mesh-only 3D scene](images/biopsy_visualization_mesh_only.png)
+[Open interactive 3D view](sample_output/biopsy_visualization.html)
 
 ### `axial_view.png`, `sagittal_view.png`, `coronal_view.png`
 
