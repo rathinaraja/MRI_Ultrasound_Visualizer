@@ -65,6 +65,9 @@ This framework is built around TCIA's [`Prostate-MRI-US-Biopsy`](https://www.can
 
 To download the dataset, go to [`MRI_Ultrasound_Visualizer/dataset`](https://github.com/rathinaraja/MRI_Ultrasound_Visualizer/tree/main/dataset). The `dataset` directory contains the files required for the MRI–ultrasound visualization workflow. Download the repository or the relevant contents of this folder before running the visualizer.
 
+To download the sample case TCIA_case_0396, use the dataset directory available [here](https://github.com/rathinaraja/MRI_Ultrasound_Visualizer/tree/main/dataset).
+
+Navigate to the dataset folder and download the complete TCIA_case_0396 directory, including all of its subfolders and files required for the MRI–ultrasound visualization workflow.
 
 **Relevant biopsy spreadsheet columns:**
 
