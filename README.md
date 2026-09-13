@@ -333,7 +333,7 @@ If you're also working around path length with a mapped drive letter:
 
 ```powershell
 # Map a short drive letter to the dataset
-subst Z: "C:\Users\rajaj\Downloads\Radiology\TCIA_20_cases"
+subst Z: "\absolute_path\...\MRI_Ultrasound_Visualizer"
 
 # Confirm it worked
 dir Z:/
@@ -345,7 +345,7 @@ subst Z: /D
 subst
 
 # Re-map (e.g. after a reboot — subst mappings do not survive one)
-subst Z: "C:\Users\rajaj\Downloads\Radiology\TCIA_20_cases"
+subst Z: "\absolute_path\...\MRI_Ultrasound_Visualizer"
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
