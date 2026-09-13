@@ -1,0 +1,5 @@
+Download the dicom.zip file from the following Hugging Face repository:
+
+https://huggingface.co/datasets/Path2AI/MRI_Ultrasound_Visualizer/blob/main/dicom.zip
+
+After downloading, unzip the archive and extract all files and subfolders contained within the dicom/ directory.
