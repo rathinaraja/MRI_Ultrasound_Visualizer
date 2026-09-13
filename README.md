@@ -282,14 +282,14 @@ The three standard radiological planes, matching 3D Slicer's own color conventio
 <!-- TODO: place axial_view.png, sagittal_view.png, coronal_view.png in images/ -->
 | Axial | Sagittal | Coronal |
 |---|---|---|
-| <img src="sample_output/axial_view.png" width="75%"/> | <img src="sample_output/sagittal_view.png" width="75%"/> | <img src="sample_output/coronal_view.png" width="75%"/> |
+| <img src="sample_output/axial_view.png" width="100%"/> | <img src="sample_output/sagittal_view.png" width="100%"/> | <img src="sample_output/coronal_view.png" width="100%"/> |
 
 ### `combined_summary.png`
 
 One image combining the mesh-only 3D scene (top) with all three 2D views (bottom row, bordered red/yellow/green). Purpose: a single at-a-glance figure combining full 3D spatial context with the standard clinical triplanar views — the file you'd actually put in a report or a slide, without needing to open four separate images.
 
 <!-- TODO: place combined_summary.png in images/ --> 
-<img src="sample_output/combined_summary" width="35%"/>
+<img src="sample_output/combined_summary.png" width="35%"/>
 
 ### File type reference
 
