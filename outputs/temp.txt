@@ -1,1 +1,22 @@
+Output images for each case
+---------------------------
+Download the outputs.zip file from the following Hugging Face repository:
 
+https://huggingface.co/datasets/Path2AI/MRI_Ultrasound_Visualizer/blob/main/outputs.zip
+
+After downloading, unzip the archive and extract all files and subfolders contained within the outputs/ directory.
+
+MRI_Ultrasound_Visualizer/
+  |-outputs
+      |-Prostate-MRI-US-Biopsy-0021
+          |-axial_view.png 
+          |-biopsy_tracks.csv 
+          |-biopsy_visualization.html 
+          |-biopsy_visualization.png 
+          |-biopsy_visualization_mesh_only.html 
+          |-biopsy_visualization_mesh_only.png 
+          |-combined_summary.png 
+          |-coronal_view.png 
+          |-highest_bvalue_series.nii.gz 
+          |-sagittal_view.png
+      |-*
