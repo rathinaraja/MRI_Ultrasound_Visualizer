@@ -116,16 +116,11 @@ unit_test/dataset_TCIA_case_0396/
 ### `scripts/` — code
 
 ```
-scripts/
+unit_test/visualization_code//
 ├── config.py
 ├── requirements.txt
-├── README.txt
-│
-├── 01_download_case_0396.py          <- case preparation (this bundle only)
-├── 02_inventory_dicom_case_0396.py
-├── 03_extract_biopsy_case_0396.py
-│
-├── 01_load_meshes.py                 <- main framework, single-case variant
+├── README.txt 
+├── 01_load_meshes.py                  
 ├── 02_build_biopsy_tubes.py
 ├── 03_visualize_scene.py
 ├── 04_slice_views.py
@@ -135,6 +130,24 @@ scripts/
 ```
 
 > `config.py`'s `CASE_ROOT` should point at `data/TCIA_case_0396` (via a mapped drive letter on Windows — see [Troubleshooting](#troubleshooting-windows-long-paths)). Adjust the two folder names above to match your own layout if you organize it differently; nothing here depends on these exact names except `CASE_ROOT` itself.
+>
+> 
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+
+The primary configuration is set in config.py as follows. Refer to [Troubleshooting: Windows Long Paths](#troubleshooting-windows-long-paths) to set  Z:\ in Windows.
+```powershell
+CASE_ROOT = Path("Z:/")   # <-- must match wherever you `subst`'d, e.g. Z:\
+
+# ---------------------------------------------------------------------
+# 2. Sub-paths derived from CASE_ROOT (matches the folder tree you have)
+# ---------------------------------------------------------------------
+DICOM_ROOT = CASE_ROOT / "dicom" / "prostate_mri_us_biopsy" / "Prostate-MRI-US-Biopsy-0396"
+STL_DIR    = CASE_ROOT / "supporting" / "selected_stl" / "Prostate-MRI-US-Biopsy-0396"
+BIOPSY_CSV = CASE_ROOT / "biopsy" / "case_0396_biopsy_tracks.csv"
+OUTPUT_DIR = "output_TCIA_case_0396"
+
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -143,8 +156,8 @@ scripts/
 ## Environment Setup
 
 ```powershell
-mkdir Radiology
-cd Radiology
+mkdir MRI_Ultrasound_Visualizer/unit_test/visualization_code/
+cd MRI_Ultrasound_Visualizer/unit_test/visualization_code/
 
 py install 3.11
 py -3.11 -m venv tcia_env
