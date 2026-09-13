@@ -47,7 +47,11 @@ For each case, the full collection provides:
 - **A private DICOM tag matters:** `(1129,"Eigen, Inc",1016) VoxelSize` is required to correctly display multi-frame US surfaces — don't strip private tags if you plan to visualize this data.
 - Full technical detail (scanner models, acquisition parameters, spreadsheet column definitions) is on the [TCIA collection page](https://www.cancerimagingarchive.net/collection/prostate-mri-us-biopsy/) — this guide only covers what's needed to download and orient yourself in the data.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+To run and validate the visualizer on a single patient case, use the unit-test code available [here](https://github.com/rathinaraja/MRI_Ultrasound_Visualizer/tree/main/unit_test).  
+
+The unit_test directory contains the scripts required to execute the workflow for one case at a time, making it suitable for verifying the complete MRI–ultrasound visualization pipeline before scaling to multiple cases.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p> 
 
 ---
 
@@ -61,8 +65,6 @@ For each case, the full collection provides:
    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
    ```
 3. Restart your computer.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
