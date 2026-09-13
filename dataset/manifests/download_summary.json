@@ -1,0 +1,10 @@
+{
+  "collection_id": "prostate_mri_us_biopsy",
+  "number_of_requested_patients": 20,
+  "number_of_series": 80,
+  "modalities": [
+    "MR",
+    "US"
+  ],
+  "estimated_total_size_MB": 879.153236
+}
