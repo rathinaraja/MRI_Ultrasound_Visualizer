@@ -68,6 +68,8 @@ For each case, the full collection provides:
 
 ## Environment Setup
 
+**Windows only** — Open PowerShell as an administrator and run the following commands.
+
 ```powershell
 mkdir MRI_Ultrasound_Visualizer/dataset/
 cd MRI_Ultrasound_Visualizer/dataset/
