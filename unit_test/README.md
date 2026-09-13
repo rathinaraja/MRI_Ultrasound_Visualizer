@@ -283,7 +283,7 @@ Every file below lives in `outputs/<case_id>/`. Descriptions here use example im
 The full 3D scene: prostate capsule (semi-transparent gray), target lesion (solid green), every biopsy tube (colored by Gleason score), **plus** one or more real MR slice planes textured with actual image intensity. This is the closest equivalent to what you'd see live in 3D Slicer with the image volume loaded alongside the models — use it to confirm the tubes and mesh are spatially correct relative to the underlying MRI, not just relative to each other.
 
 <!-- TODO: place biopsy_visualization.png in images/ --> 
-<img src="unit_test/output_TCIA_case_0396/biopsy_visualization.png" width="35%"/>
+<img src="output_TCIA_case_0396/biopsy_visualization.png" width="35%"/>
 
 The `.html` version is the same scene, but interactive and rotatable in a browser — open it directly, no Slicer or Python required.
 
@@ -306,14 +306,14 @@ The three standard radiological planes, matching 3D Slicer's own color conventio
 <!-- TODO: place axial_view.png, sagittal_view.png, coronal_view.png in images/ -->
 | Axial | Sagittal | Coronal |
 |---|---|---|
-| <img src="unit_test/output_TCIA_case_0396/axial_view.png" width="100%"/> | <img src="unit_test/output_TCIA_case_0396/sagittal_view.png" width="100%"/> | <img src="unit_test/output_TCIA_case_0396/coronal_view.png" width="100%"/> |
+| <img src="output_TCIA_case_0396/axial_view.png" width="100%"/> | <img src="output_TCIA_case_0396/sagittal_view.png" width="100%"/> | <img src="output_TCIA_case_0396/coronal_view.png" width="100%"/> |
 
 ### `combined_summary.png`
 
 One image combining the mesh-only 3D scene (top) with all three 2D views (bottom row, bordered red/yellow/green). Purpose: a single at-a-glance figure combining full 3D spatial context with the standard clinical triplanar views — the file you'd actually put in a report or a slide, without needing to open four separate images.
 
 <!-- TODO: place combined_summary.png in images/ --> 
-<img src="unit_test/output_TCIA_case_0396/combined_summary.png" width="35%"/>
+<img src="output_TCIA_case_0396/combined_summary.png" width="35%"/>
 
 ### `case_0396_biopsy_tracks.csv`, inventory CSVs, manifest CSV
 
