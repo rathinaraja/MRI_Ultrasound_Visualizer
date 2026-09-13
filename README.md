@@ -1,7 +1,9 @@
 <a name="readme-top"></a>
 # MRI & Ultrasound Biopsy Visualizer
 
-A Python framework that reconstructs TCIA's prostate MRI-ultrasound fusion biopsy visualizations programmatically — no 3D Slicer session required. For each case, it renders the prostate gland, any suspicious lesions, and every tracked biopsy needle track in both 3D and standard 2D radiological views, then packages everything into one summary image.
+The visualizer was implemented entirely in **Python rather than relying on an interactive 3D Slicer session**, providing a lightweight, reproducible, and fully scriptable workflow. This approach also reduces the additional memory and graphics overhead associated with loading multiple volumetric images, surface meshes, and biopsy trajectories simultaneously in 3D Slicer.
+
+It is a **Python-based framework that programmatically reconstructs the TCIA prostate MRI–ultrasound fusion biopsy visualizations** without requiring 3D Slicer during execution. For each patient case, the framework renders the prostate gland, MRI-defined suspicious lesions, and all tracked biopsy needle trajectories in both **3D and standard 2D radiological views**, and then integrates these components into a single comprehensive summary visualization for convenient review and interpretation.
 
 ---
 
@@ -23,7 +25,10 @@ A Python framework that reconstructs TCIA's prostate MRI-ultrasound fusion biops
 
 ## Background
 
-In MRI-ultrasound fusion biopsy, a patient's prior multiparametric MRI (used to identify suspicious regions) is nonrigidly registered — "fused" — with a real-time transrectal ultrasound scan taken during the biopsy itself. This lets a urologist target MRI-visible lesions precisely, typically alongside a systematic 12-core template biopsy of the whole gland. Every core's 3D location is tracked mechanically, so afterward each biopsy can be placed exactly where it was taken from, relative to both the MRI and ultrasound volumes — enabling image-pathology correlation that a biopsy report alone can't provide.
+In **MRI–ultrasound fusion-guided prostate biopsy**, a patient’s previously acquired multiparametric MRI, which is used to identify suspicious prostate lesions, is nonrigidly registered or “fused” with a real-time transrectal ultrasound volume acquired during the biopsy procedure. This fusion enables the urologist to accurately target MRI-visible lesions while also performing systematic sampling, typically using a 12-core biopsy template across the prostate.
+
+Because the three-dimensional position of each biopsy needle trajectory is mechanically tracked, every tissue core can subsequently be mapped back to its precise anatomical location relative to both the MRI and ultrasound volumes. This spatial correspondence enables direct **image–pathology correlation**, providing substantially richer information than a conventional biopsy report alone.
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -43,6 +48,9 @@ All of this from raw DICOM + STL + spreadsheet data — no manual 3D Slicer step
 ## Dataset
 
 This framework is built around TCIA's [`Prostate-MRI-US-Biopsy`](https://www.cancerimagingarchive.net/collection/prostate-mri-us-biopsy/) collection: MR + ultrasound DICOM, STL surface meshes (prostate + target ROIs), Slicer biopsy-overlay files, and a spreadsheet of per-core tip/base coordinates and Gleason scores.
+
+To download the dataset, go to [`MRI_Ultrasound_Visualizer/dataset`](https://github.com/rathinaraja/MRI_Ultrasound_Visualizer/tree/main/dataset). The `dataset` directory contains the files required for the MRI–ultrasound visualization workflow. Download the repository or the relevant contents of this folder before running the visualizer.
+
 
 **Relevant biopsy spreadsheet columns:**
 
@@ -119,9 +127,8 @@ visualization/
 ├── 06_combine_views.py
 ├── run_pipeline.py
 ├── verify_coordinate_system.py
-├── verify_tube_mesh_alignment.py
-├── requirements.txt
-└── README.txt
+├── verify_tube_mesh_alignment.py 
+└── requirements.txt
 ```
 
 ### `outputs/` — one folder per case
@@ -148,10 +155,10 @@ outputs/
 ---
 
 ## Environment Setup
-
+If not created already, create the virtual environment and install the required libraries.
 ```powershell
-mkdir Radiology
-cd Radiology
+mkdir MRI_Ultrasound_Visualizer/visualization/
+cd MRI_Ultrasound_Visualizer/visualization/
 
 py install 3.11
 py -3.11 -m venv tcia_env
@@ -160,6 +167,7 @@ py -3.11 -m venv tcia_env
 python -m pip install --upgrade pip
 py -m pip install -r requirements.txt
 ```
+if tcia_env environment already created, then install the required libraries from requirements.txt
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -170,6 +178,25 @@ py -m pip install -r requirements.txt
 All paths — where the DICOM/STL/spreadsheet data lives, where outputs are written — are set in **one place**: `config.py`. Edit `DATASET_ROOT` there if you move the dataset, and every other script picks up the change automatically.
 
 `config.py` also holds `CONVERT_LPS_TO_RAS`, a single flag controlling whether biopsy coordinates, MR slice planes, and 2D contour overlays get an LPS→RAS sign flip. This has already been empirically verified for this dataset (see [Verifying Coordinate Alignment](#verifying-coordinate-alignment)) — only revisit it if you add a new dataset export with a different coordinate convention.
+
+The primary configuration is set in config.py as follows. Refer to [Troubleshooting: Windows Long Paths](#troubleshooting-windows-long-paths) to set  Z:\ in Windows.
+```powershell
+DATASET_ROOT = Path("Z:/")   # <-- must match wherever you `subst`'d, e.g. Z:\ 
+
+# ---------------------------------------------------------------------
+# 2. Sub-paths derived from DATASET_ROOT (matches the folder tree spec)
+# ---------------------------------------------------------------------
+DICOM_BASE = DATASET_ROOT / "dataset" / "dicom"
+STL_BASE   = DATASET_ROOT / "dataset" / "supporting" / "selected_stl"
+OVERLAYS_BASE = DATASET_ROOT / "dataset" / "supporting" / "selected_overlays"
+BIOPSY_XLSX = DATASET_ROOT / "dataset" / "supporting" / "spreadsheets" / "TCIA-Biopsy-Data_2020-07-14.xlsx"
+
+MANIFESTS_DIR = DATASET_ROOT / "dataset" / "manifests"
+SELECTED_PATIENTS_FILE = MANIFESTS_DIR / "selected_patients.txt"
+
+OUTPUT_BASE = "outputs"
+OUTPUT_BASE.mkdir(parents=True, exist_ok=True)
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
