@@ -263,13 +263,13 @@ The full 3D scene: prostate capsule (semi-transparent gray), target lesion (soli
 
 The `.html` version is the same scene, but interactive and rotatable in a browser — open it directly, no Slicer or Python required.
 
-![Full 3D scene with MR slice planes](https://github.com/rathinaraja/MRI_Ultrasound_Visualizer/tree/main/sample_output/biopsy_visualization.html)
+🔗 [Open interactive 3D view](https://htmlpreview.github.io/?https://raw.githubusercontent.com/rathinaraja/MRI_Ultrasound_Visualizer/main/sample_output/biopsy_visualization.html)
 
 ### `biopsy_visualization_mesh_only.png` / `.html`
 
 The same mesh + tubes, but with **no MR/US image data at all**, on a two-tone gradient background matching TCIA's own reference figure. Purpose: an uncluttered view that emphasizes gland shape, lesion location, and needle-track color-coding on their own — closer to a diagram than a scan, and what `combined_summary.png` uses as its 3D panel.
 
-[Open interactive 3D view](sample_output/biopsy_visualization.html)
+🔗 [Open interactive 3D view](https://htmlpreview.github.io/?https://raw.githubusercontent.com/rathinaraja/MRI_Ultrasound_Visualizer/main/sample_output/biopsy_visualization_mesh_only.html) 
 
 ### `axial_view.png`, `sagittal_view.png`, `coronal_view.png`
 
@@ -282,14 +282,14 @@ The three standard radiological planes, matching 3D Slicer's own color conventio
 <!-- TODO: place axial_view.png, sagittal_view.png, coronal_view.png in images/ -->
 | Axial | Sagittal | Coronal |
 |---|---|---|
-| ![Axial view](images/axial_view.png) | ![Sagittal view](images/sagittal_view.png) | ![Coronal view](images/coronal_view.png) |
+| <img src="sample_output/axial_view.png" width="30%"/> | <img src="sample_output/sagittal_view.png" width="30%"/> | <img src="sample_output/coronal_view.png" width="30%"/> |
 
 ### `combined_summary.png`
 
 One image combining the mesh-only 3D scene (top) with all three 2D views (bottom row, bordered red/yellow/green). Purpose: a single at-a-glance figure combining full 3D spatial context with the standard clinical triplanar views — the file you'd actually put in a report or a slide, without needing to open four separate images.
 
-<!-- TODO: place combined_summary.png in images/ -->
-![Combined summary](images/combined_summary.png)
+<!-- TODO: place combined_summary.png in images/ --> 
+<img src="sample_output/combined_summary" alt="Combined summary" width="35%"/>
 
 ### File type reference
 
@@ -304,12 +304,12 @@ One image combining the mesh-only 3D scene (top) with all three 2D views (bottom
 
 ## Verifying Coordinate Alignment
 
-Two standalone diagnostics (not part of the main pipeline) settle whether biopsy coordinates need any sign conversion before use — run once per new dataset export, not per case:
+Two standalone diagnostics (not part of the main pipeline) settle whether biopsy coordinates need any sign conversion before use — run once per new dataset export, not per case: for example, for a case Prostate-MRI-US-Biopsy-0396,
 
 ```powershell
-python verify_coordinate_system.py --fcsv "path\to\case.fcsv" --xlsx "path\to\TCIA-Biopsy-Data_2020-07-14.xlsx" --case-id "Prostate-MRI-US-Biopsy-0396"
+python verify_coordinate_system.py --fcsv "dataset\supporting\selected_overlays\Prostate-MRI-US-Biopsy-0396.fcsv" --xlsx "dataset\supporting\spreadsheets\TCIA-Biopsy-Data_2020-07-14.xlsx" --case-id "Prostate-MRI-US-Biopsy-0396"
 
-python verify_tube_mesh_alignment.py --stl-dir "path\to\selected_stl\Prostate-MRI-US-Biopsy-0396" --xlsx "path\to\TCIA-Biopsy-Data_2020-07-14.xlsx" --case-id "Prostate-MRI-US-Biopsy-0396"
+python verify_tube_mesh_alignment.py --stl-dir "dataset\supporting\selected_stl\Prostate-MRI-US-Biopsy-0396" --xlsx "dataset\supporting\spreadsheets\TCIA-Biopsy-Data_2020-07-14.xlsx" --case-id "Prostate-MRI-US-Biopsy-0396"
 ```
 
 `verify_tube_mesh_alignment.py` is the one that actually matters: it builds biopsy points under both coordinate hypotheses and checks which one actually lands inside the real prostate STL mesh, rather than relying on a theoretical LPS/RAS assumption. The result is already reflected in `config.py`'s `CONVERT_LPS_TO_RAS` setting — you only need to re-run this if you're working with a different dataset export.
