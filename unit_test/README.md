@@ -61,6 +61,29 @@ This case was chosen as the pilot specifically because its ground truth is simpl
 
 ## Dataset
 
+This framework is built around TCIA's [`Prostate-MRI-US-Biopsy`](https://www.cancerimagingarchive.net/collection/prostate-mri-us-biopsy/) collection: MR + ultrasound DICOM, STL surface meshes (prostate + target ROIs), Slicer biopsy-overlay files, and a spreadsheet of per-core tip/base coordinates and Gleason scores.
+
+To download the dataset, go to [`MRI_Ultrasound_Visualizer/dataset`](https://github.com/rathinaraja/MRI_Ultrasound_Visualizer/tree/main/dataset). The `dataset` directory contains the files required for the MRI–ultrasound visualization workflow. Download the repository or the relevant contents of this folder before running the visualizer.
+
+
+**Relevant biopsy spreadsheet columns:**
+
+```
+Bx Tip X (MRI Coord)      Bx Base X (MRI Coord)
+Bx Tip Y (MRI Coord)      Bx Base Y (MRI Coord)
+Bx Tip Z (MRI Coord)      Bx Base Z (MRI Coord)
+```
+
+Each row's tip/base pair defines one biopsy core's needle track, colored by its Gleason score:
+
+| Gleason Primary + Secondary | Color |
+|---|---|
+| Not present (benign) | Blue |
+| 3 + 3 | Orange |
+| Any other combination (3+4, 4+3, 4+4, ...) | Red |
+
+> For the full dataset description and step-by-step download instructions, see the separate **Dataset Download Guide** (`README_TCIA_download.md`).
+
 This bundle downloads **only** `Prostate-MRI-US-Biopsy-0396` from TCIA's [`Prostate-MRI-US-Biopsy`](https://www.cancerimagingarchive.net/collection/prostate-mri-us-biopsy/) collection; its MR + ultrasound DICOM, via `01_download_case_0396.py`.
 
 Two things are **not** automated by the scripts in this bundle and need to be obtained separately:
@@ -82,10 +105,10 @@ unit_test/
 └── visualization_code/
 ```
 
-### `data/` — one case's data (= `CASE_ROOT` in `config.py`)
+### `unit_test/dataset_TCIA_case_0396/` — one case's data (= `CASE_ROOT` in `config.py`)
 
 ```
-unit_test/dataset_TCIA_case_0396/
+dataset_TCIA_case_0396/
 ├── biopsy/
 │   └── case_0396_biopsy_tracks.csv
 ├── dicom/
@@ -113,10 +136,10 @@ unit_test/dataset_TCIA_case_0396/
 └── output_TCIA_case_0396         
 ```
 
-### `scripts/` — code
+### `visualization_code/` — code
 
 ```
-unit_test/visualization_code//
+unit_test/visualization_code/
 ├── config.py
 ├── requirements.txt
 ├── README.txt 
@@ -127,26 +150,6 @@ unit_test/visualization_code//
 ├── 05_extract_highest_bvalue_nifti.py
 ├── 06_combine_views.py
 └── run_all.py
-```
-
-> `config.py`'s `CASE_ROOT` should point at `data/TCIA_case_0396` (via a mapped drive letter on Windows — see [Troubleshooting](#troubleshooting-windows-long-paths)). Adjust the two folder names above to match your own layout if you organize it differently; nothing here depends on these exact names except `CASE_ROOT` itself.
->
-> 
-OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
-
-The primary configuration is set in config.py as follows. Refer to [Troubleshooting: Windows Long Paths](#troubleshooting-windows-long-paths) to set  Z:\ in Windows.
-```powershell
-CASE_ROOT = Path("Z:/")   # <-- must match wherever you `subst`'d, e.g. Z:\
-
-# ---------------------------------------------------------------------
-# 2. Sub-paths derived from CASE_ROOT (matches the folder tree you have)
-# ---------------------------------------------------------------------
-DICOM_ROOT = CASE_ROOT / "dicom" / "prostate_mri_us_biopsy" / "Prostate-MRI-US-Biopsy-0396"
-STL_DIR    = CASE_ROOT / "supporting" / "selected_stl" / "Prostate-MRI-US-Biopsy-0396"
-BIOPSY_CSV = CASE_ROOT / "biopsy" / "case_0396_biopsy_tracks.csv"
-OUTPUT_DIR = "output_TCIA_case_0396"
-
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -175,19 +178,24 @@ If `tcia_env` already exists from the main framework, just activate it and insta
 
 ## Configuration
 
-Everything is driven by one `config.py`, pointed at this single case instead of a 20-case dataset root:
+The primary configuration is set in config.py as follows. Refer to [Troubleshooting: Windows Long Paths](#troubleshooting-windows-long-paths) to set  Z:\ in Windows.
+```powershell
+CASE_ROOT = Path("Z:/")   # <-- must match wherever you `subst`'d, e.g. Z:\
 
-```python
-CASE_ROOT  = Path("Z:/")   # <-- mapped to data/TCIA_case_0396 — see Troubleshooting below
-
+# ---------------------------------------------------------------------
+# 2. Sub-paths derived from CASE_ROOT (matches the folder tree you have)
+# ---------------------------------------------------------------------
 DICOM_ROOT = CASE_ROOT / "dicom" / "prostate_mri_us_biopsy" / "Prostate-MRI-US-Biopsy-0396"
 STL_DIR    = CASE_ROOT / "supporting" / "selected_stl" / "Prostate-MRI-US-Biopsy-0396"
 BIOPSY_CSV = CASE_ROOT / "biopsy" / "case_0396_biopsy_tracks.csv"
-OUTPUT_DIR = CASE_ROOT / "outputs"
+OUTPUT_DIR = "output_TCIA_case_0396"
+
 ```
 
 `config.py` also holds `CONVERT_LPS_TO_RAS` (currently `False` for this case — see [Verifying Coordinate Alignment](#verifying-coordinate-alignment)) and the case's known `MAIN_MRI_SERIES_UID` / `US_SERIES_UID`, used to pick the right STL file when the folder contains both an MR-derived and a US-derived copy of the same surface.
 
+> `config.py`'s `CASE_ROOT` should point at `data/TCIA_case_0396` (via a mapped drive letter on Windows — see [Troubleshooting](#troubleshooting-windows-long-paths)). Adjust the two folder names above to match your own layout if you organize it differently; nothing here depends on these exact names except `CASE_ROOT` itself.
+ 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
@@ -247,15 +255,7 @@ python run_all.py
 
 ---
 
-## File-by-File Description
-
-### Case preparation (this bundle only)
-
-| File | Purpose |
-|---|---|
-| `01_download_case_0396.py` | Queries IDC for this one patient's MR/US series, validates both modalities are present, saves a manifest, and downloads the DICOM. |
-| `02_inventory_dicom_case_0396.py` | Reads every downloaded DICOM header (no pixel data) into a per-file CSV, then collapses it into a per-series summary CSV. |
-| `03_extract_biopsy_case_0396.py` | Filters the shared biopsy spreadsheet to this case's 17 rows, validates each core's MRI coordinates, and assigns tube class/color. |
+## File-by-File Description 
 
 ### Visualization pipeline (single-case variant of the main framework)
 
@@ -276,23 +276,44 @@ python run_all.py
 
 ## Understanding the Output Images
 
-Every file below lands directly in `outputs/` (no per-case subfolder is needed — there's only one case).
+Every file below lives in `outputs/<case_id>/`. Descriptions here use example images from `outputs/sample_output/` — drop your own generated files there with matching names to see them rendered in this README.
 
 ### `biopsy_visualization.png` / `.html`
 
-The full 3D scene: prostate capsule, target lesion, every biopsy tube colored by Gleason score, plus real MR slice plane(s) textured with actual image intensity. Use it to confirm the tubes and mesh are spatially correct relative to the underlying MRI. The `.html` version is the same scene, interactive and rotatable in any browser.
+The full 3D scene: prostate capsule (semi-transparent gray), target lesion (solid green), every biopsy tube (colored by Gleason score), **plus** one or more real MR slice planes textured with actual image intensity. This is the closest equivalent to what you'd see live in 3D Slicer with the image volume loaded alongside the models — use it to confirm the tubes and mesh are spatially correct relative to the underlying MRI, not just relative to each other.
+
+<!-- TODO: place biopsy_visualization.png in images/ --> 
+<img src="unit_test/output_TCIA_case_0396/biopsy_visualization.png" width="35%"/>
+
+The `.html` version is the same scene, but interactive and rotatable in a browser — open it directly, no Slicer or Python required.
+
+🔗 [Open interactive 3D view](https://htmlpreview.github.io/?https://raw.githubusercontent.com/rathinaraja/MRI_Ultrasound_Visualizer/main/unit_test/output_TCIA_case_0396/biopsy_visualization.html)
 
 ### `biopsy_visualization_mesh_only.png` / `.html`
 
-The same mesh + tubes with no MR/US image data, on a gradient background — an uncluttered diagram-style view, and what `combined_summary.png` uses as its 3D panel.
+The same mesh + tubes, but with **no MR/US image data at all**, on a two-tone gradient background matching TCIA's own reference figure. Purpose: an uncluttered view that emphasizes gland shape, lesion location, and needle-track color-coding on their own — closer to a diagram than a scan, and what `combined_summary.png` uses as its 3D panel.
+
+🔗 [Open interactive 3D view](https://htmlpreview.github.io/?https://raw.githubusercontent.com/rathinaraja/MRI_Ultrasound_Visualizer/main/unit_test/output_TCIA_case_0396/biopsy_visualization_mesh_only.html) 
 
 ### `axial_view.png`, `sagittal_view.png`, `coronal_view.png`
 
-The three standard radiological planes (red/yellow/green, matching 3D Slicer's own convention), each a true plane/mesh intersection through the STL and every tube.
+The three standard radiological planes, matching 3D Slicer's own color convention (**red** = axial, **yellow** = sagittal, **green** = coronal). Each is a real plane/mesh intersection through the actual MR image, the prostate/target STL outlines, and every biopsy tube — not a rendered screenshot. Together they let you orient the 3D findings within the same three views a radiologist reads a scan in.
+
+- **Axial** (top-down) — usually the primary plane radiologists read prostate MRI in.
+- **Sagittal** (side view) — needle tracks here often appear as elongated diamonds, since cores are frequently oriented closer to parallel with this plane.
+- **Coronal** (front-back) — front-to-back context, useful for gland shape and lesion position relative to the midline.
+
+<!-- TODO: place axial_view.png, sagittal_view.png, coronal_view.png in images/ -->
+| Axial | Sagittal | Coronal |
+|---|---|---|
+| <img src="unit_test/output_TCIA_case_0396/axial_view.png" width="100%"/> | <img src="unit_test/output_TCIA_case_0396/sagittal_view.png" width="100%"/> | <img src="unit_test/output_TCIA_case_0396/coronal_view.png" width="100%"/> |
 
 ### `combined_summary.png`
 
-The mesh-only 3D scene (top) with all three 2D views (bottom row) in one image — the file you'd actually put in a report.
+One image combining the mesh-only 3D scene (top) with all three 2D views (bottom row, bordered red/yellow/green). Purpose: a single at-a-glance figure combining full 3D spatial context with the standard clinical triplanar views — the file you'd actually put in a report or a slide, without needing to open four separate images.
+
+<!-- TODO: place combined_summary.png in images/ --> 
+<img src="unit_test/output_TCIA_case_0396/combined_summary.png" width="35%"/>
 
 ### `case_0396_biopsy_tracks.csv`, inventory CSVs, manifest CSV
 
@@ -320,9 +341,9 @@ The case's highest-b-value diffusion series, exported for downstream analysis ou
 The main framework's standalone diagnostics apply here unchanged (copy them into `scripts/` if they're not already present):
 
 ```powershell
-python verify_coordinate_system.py --fcsv "TCIA_case_0396\supporting\selected_overlays\Prostate-MRI-US-Biopsy-0396\...(US-date-20110218)__Data__Bx-2-Benign.fcsv" --xlsx "TCIA_case_0396\supporting\spreadsheets\TCIA-Biopsy-Data_2020-07-14.xlsx" --case-id "Prostate-MRI-US-Biopsy-0396"
+python verify_coordinate_system.py --fcsv "dataset_TCIA_case_0396\supporting\selected_overlays\Prostate-MRI-US-Biopsy-0396\...(US-date-20110218)__Data__Bx-2-Benign.fcsv" --xlsx "dataset_TCIA_case_0396\supporting\spreadsheets\TCIA-Biopsy-Data_2020-07-14.xlsx" --case-id "Prostate-MRI-US-Biopsy-0396"
 
-python verify_tube_mesh_alignment.py --stl-dir "TCIA_case_0396\supporting\selected_stl\Prostate-MRI-US-Biopsy-0396" --xlsx "TCIA_case_0396\supporting\spreadsheets\TCIA-Biopsy-Data_2020-07-14.xlsx" --case-id "Prostate-MRI-US-Biopsy-0396"
+python verify_tube_mesh_alignment.py --stl-dir "dataset_TCIA_case_0396\supporting\selected_stl\Prostate-MRI-US-Biopsy-0396" --xlsx "dataset_TCIA_case_0396\supporting\spreadsheets\TCIA-Biopsy-Data_2020-07-14.xlsx" --case-id "Prostate-MRI-US-Biopsy-0396"
 ```
 
 `verify_tube_mesh_alignment.py` is the one that actually matters: it builds biopsy points under both the raw and X/Y-flipped coordinate hypotheses and checks which one actually lands inside this case's real prostate STL mesh. This is exactly how `config.py`'s `CONVERT_LPS_TO_RAS = False` was determined for case 0396 — the result already reflected in `config.py` here, so you only need to re-run this if you're validating a different case with its own STL export.
@@ -346,7 +367,7 @@ Map a short drive letter to this case's data folder so `config.py`'s `CASE_ROOT`
 
 ```powershell
 # Map a short drive letter to the case data folder
-subst Z: "C:\Users\rajaj\Downloads\Radiology\TCIA_sample_cases\2.Dataset_TCIA_case_0396"
+subst Z: "\absolute_path\...\unit_test"
 
 # Confirm it worked
 dir Z:/
@@ -358,7 +379,7 @@ subst Z: /D
 subst
 
 # Re-map (e.g. after a reboot — subst mappings do not survive one)
-subst Z: "C:\Users\rajaj\Downloads\Radiology\TCIA_sample_cases\2.Dataset_TCIA_case_0396"
+subst Z: "\absolute_path\...\unit_test"
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
