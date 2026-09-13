@@ -150,6 +150,10 @@ outputs/
     └── ...
 ```
 
+To run and validate the visualizer on a single patient case, use the unit-test code available [here](https://github.com/rathinaraja/MRI_Ultrasound_Visualizer/tree/main/unit_test).  
+
+The unit_test directory contains the scripts required to execute the workflow for one case at a time, making it suitable for verifying the complete MRI–ultrasound visualization pipeline before scaling to multiple cases.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
